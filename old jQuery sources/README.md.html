@@ -1,0 +1,44 @@
+<!doctype html><html><head><title>README</title></head><body> 
+<h1 id="treewalker">treeWalker</h1>
+<p>This function adds aria tree markup and keyboard navigation to an HTML container.</p>
+<h2 id="general-form">General Form</h2>
+<ul>
+<li>treeWalker (options)</li>
+<li>or treeWalker (container, name, options)</li>
+</ul>
+<p>** Note: container should be the top &quot;ul&quot; element in the list structure</p>
+<h3 id="options">Options:</h3>
+<ul>
+<li><p>root: (dom node), root node,</p>
+</li>
+<li><p>open: (function), called when a node is opened with node as argument;</p>
+</li>
+<li><p>close: (function), called when a node is closed, with node as an argument</p>
+</li>
+<li><p>beforeOpen: (function), called before open with node as an argument</p>
+</li>
+<li><p>group: (string), selects grouping items (default &quot;ul&quot;)</p>
+</li>
+<li><p>role_group: (string), role to attach to grouping items (default &quot;group&quot;)</p>
+</li>
+<li><p>role_root: (string), role of root element (default: &quot;tree&quot;)</p>
+</li>
+<li><p>branch: (string), selects branches (default &quot;li&quot;)</p>
+</li>
+<li><p>role_branch: (string), role to attach to branches (default &quot;treeitem&quot;)</p>
+</li>
+<li><p>state_expanded: (string), indicates expanded branch (default: &quot;aria-expanded&quot;)</p>
+</li>
+</ul>
+<p>***  note: if open and close functions are not supplied, this function will have no effect; the open and close functions should generally show / hide nodes, respectively.</p>
+<h2 id="usage">Usage</h2>
+<p>Originally developed to make deeply nested lists used as menus accessible.
+The menus used the CSS menu widgit called Superfish:
+<a href="https://github.com/joeldbirch/superfish">https://github.com/joeldbirch/superfish</a></p>
+<h3 id="demo">Demo</h3>
+<p><a href="http://www.mit.edu/~rjc/aria/accessible-superfish/physionet.html">http://www.mit.edu/~rjc/aria/accessible-superfish/physionet.html</a></p>
+<p>Here is a demo using the original deeply nested list structure for which the plugin was developed. Use arrows to move around the tree. Tree should gain focus when page launches, but if not, use tab to focus the tree, then use arrows to navigate.</p>
+
+</body>
+</html>
+
