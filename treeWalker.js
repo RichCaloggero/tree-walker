@@ -38,6 +38,11 @@ currentNode = root.firstElementChild;
 currentNode.setAttribute("tabindex", "0");
 if (options.focus) focusNode(currentNode);
 
+root.addEventListener("focusin", e => {
+if (root.contains(e.relatedTarget)) return true;
+currentNode.focus();
+}); // focusin
+
 root.addEventListener("keydown", e => {
 const key = e.key;
 

@@ -12,7 +12,7 @@ nav li > ul.open {display: block;}
 
 <script type="module">
 import * as tree from "./treeWalker.js";
-tree.treeWalker(document.querySelector("nav > ul"), {focus: true});
+tree.treeWalker(document.querySelector("nav ul"), {focus: true});
 </script>
 
 </head>
@@ -20,6 +20,7 @@ tree.treeWalker(document.querySelector("nav > ul"), {focus: true});
 <nav aria-label="site">
 <div><a href="/">Home</a></div>
 
+<div role="application" aria-roledescription="navigation menu, press enter to interact">
 <ul>
 <li>
 <a href="#">Admissions &amp; Aid</a>
@@ -158,6 +159,7 @@ tree.treeWalker(document.querySelector("nav > ul"), {focus: true});
 
 <li><a href="https://mitfactsprod.wpengine.com/accreditation/">Accreditation<span></span></a></li>
 </ul>
+</div>
 </li>
 </ul></nav>
 
