@@ -15,4 +15,4 @@ This function adds aria tree markup and keyboard navigation to an HTML list stru
 
 ## Demo
 
-https://RichCaloggero.github.io/tree-walker/master/tree.html
+https://RichCaloggero.github.io/tree-walker/tree.html
