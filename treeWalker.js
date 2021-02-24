@@ -1,7 +1,10 @@
 const defaultOptions = {
 type: "menu",
-open: expandTree,
-close: collapseTree,
+expand: expandTree,
+collapse: collapseTree,
+focus: false,
+instructionVisibility: 0,
+instructionText: "navigate with arrows, follow links with enter",
 instructions: displayInstructions
 }; // defaultOptions
 
@@ -10,7 +13,7 @@ options = Object.assign({}, defaultOptions, options);
 const menu = options.type === "menu";
 const roles = setRoles(menu);
 root.setAttribute("role", roles.top);
-if (options.instructions instanceof Function) options.instructions(root);
+if (options.instructions instanceof Function) options.instructions(root, options);
 
 $$("a, button, [tabindex]", root).forEach(x => x.setAttribute("tabindex", "-1"));
 
@@ -31,7 +34,9 @@ return initTreeNavigation(root);
 
 function initTreeNavigation (root) {
 let currentNode = null;
-currentNode = focusNode(root.firstElementChild);
+currentNode = root.firstElementChild;
+currentNode.setAttribute("tabindex", "0");
+if (options.focus) focusNode(currentNode);
 
 root.addEventListener("keydown", e => {
 const key = e.key;
@@ -44,7 +49,7 @@ case "ArrowRight": return focusNode(down(currentNode));
 case "ArrowLeft": return focusNode(up(currentNode));
 
 case "Enter": return activateNode(currentNode);
-case "Escape": return closeAll(root);
+case "Escape": return focusNode(closeAll(root).firstElementChild);
 
 default: return true;
 } // switch
@@ -56,14 +61,14 @@ function previous (node) {return node.previousElementSibling;}
 function down (node) {
 if (isLeafNode(node)) return null;
 const sub = $(`[role=${roles.sub}]`, node);
-expandTree(sub);
+options.expand(sub);
 node.setAttribute("aria-expanded", "true");
 return $(`[role=${roles.branch}]`, sub);
 } // down
 
 function up (node) {
 const sub = node.parentElement;
-collapseTree(sub);
+options.collapse(sub);
 const branch  = sub.closest(`[role=${roles.branch}]`);
 branch.setAttribute("aria-expanded", "false");
 return branch;
@@ -86,8 +91,8 @@ if (link) location = link.getAttribute("href");
 } // activateNode
 
 function closeAll (root) {
-$$(`[role=${roles.sub}].open`, root).forEach(sub => sub.removeAttribute("open"));
-return focusNode(root.firstElementChild);
+$$(`[role=${roles.sub}]`, root).forEach(sub => options.collapse(sub));
+return root;
 } // closeAll
 
 function isLeafNode (node) {return node && !node.hasAttribute("aria-expanded");}
@@ -103,10 +108,12 @@ return menu?
 export function expandTree (node) {node.classList.add("open");}
 export function collapseTree (node) {node.classList.remove("open");}
 
-function displayInstructions (root) {
+export function displayInstructions (root, options) {
 setTimeout(() => {
-root.insertAdjacentHTML("afterend", '<div  role="alert">navigate with arrows, follow links with enter</div>');
-//setTimeout(() => root.nextElementSibling.remove(), 70);
+root.insertAdjacentHTML("afterend", `<div  role="alert">${options.instructionText}</div>`);
+if (options.instructionVisibility > 0)
+setTimeout(() => root.nextElementSibling.remove(),
+options.instructionVisibility + 70 );
 }, 130); // setTimeout
 } // displayInstructions
 
