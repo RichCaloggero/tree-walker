@@ -10,6 +10,11 @@ nav li > ul {display: none;}
 nav li > ul.open {display: block;}
 </style>
 
+<script type="module">
+import * as tree from "./treeWalker.js";
+tree.treeWalker(document.querySelector("nav > ul"), {type: "menu"});
+</script>
+
 </head>
 <body>
 <nav aria-label="site">
@@ -164,7 +169,6 @@ nav li > ul.open {display: block;}
 </footer>
 
 
-<script type="module" src="treewalker.js"></script>
 
 </body>
 </html>

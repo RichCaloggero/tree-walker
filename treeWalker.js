@@ -1,11 +1,16 @@
+const defaultOptions = {
+type: "menu",
+open: expandTree,
+close: collapseTree,
+instructions: displayInstructions
+}; // defaultOptions
 
-treeWalker($("nav > ul"), {type: "menu"});
-
-function treeWalker  (root, options = {type: "menu"}) {
+export function treeWalker  (root, options = {}) {
+options = Object.assign({}, defaultOptions, options);
 const menu = options.type === "menu";
 const roles = setRoles(menu);
 root.setAttribute("role", roles.top);
-setTimeout(() => root.insertAdjacentHTML("afterend", '<div role="alert">navigate with arrows, follow links with enter</div>'), 50);
+if (options.instructions instanceof Function) options.instructions(root);
 
 $$("a, button, [tabindex]", root).forEach(x => x.setAttribute("tabindex", "-1"));
 
@@ -50,15 +55,18 @@ function previous (node) {return node.previousElementSibling;}
 
 function down (node) {
 if (isLeafNode(node)) return null;
-$(`[role=${roles.sub}]`, node).classList.add("open");
-return $(`[role=${roles.sub}] > [role=${roles.branch}]`, node);
+const sub = $(`[role=${roles.sub}]`, node);
+expandTree(sub);
+node.setAttribute("aria-expanded", "true");
+return $(`[role=${roles.branch}]`, sub);
 } // down
 
 function up (node) {
-node.parentElement.classList.remove("open");
-const newNode = node.parentElement.closest(`[role=${roles.branch}]`);
-newNode.setAttribute("aria-expanded", "false");
-return newNode;
+const sub = node.parentElement;
+collapseTree(sub);
+const branch  = sub.closest(`[role=${roles.branch}]`);
+branch.setAttribute("aria-expanded", "false");
+return branch;
 } // up
 
 function focusNode (node) {
@@ -91,6 +99,16 @@ return menu?
 : {top: "tree", branch: "treeitem", sub: "group"};
 } // setRoles
 } // initTree
+
+export function expandTree (node) {node.classList.add("open");}
+export function collapseTree (node) {node.classList.remove("open");}
+
+function displayInstructions (root) {
+setTimeout(() => {
+root.insertAdjacentHTML("afterend", '<div  role="alert">navigate with arrows, follow links with enter</div>');
+//setTimeout(() => root.nextElementSibling.remove(), 70);
+}, 130); // setTimeout
+} // displayInstructions
 
 function $ (selector, context = document) {
 return context.querySelector(selector);
