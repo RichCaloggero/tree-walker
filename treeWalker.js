@@ -2,6 +2,8 @@ const defaultOptions = {
 type: "menu",
 expand: expandTree,
 collapse: collapseTree,
+labelLinks: true,
+visuallyIndicateMenus: true,
 focus: false,
 instructionVisibility: 0,
 instructionText: "navigate with arrows, follow links with enter",
@@ -21,12 +23,21 @@ $$("ul, ol", root).forEach(subtree => subtree.setAttribute("role", roles.sub));
  
 $$("li", root).forEach(branch => {
 const link = $("[href]", branch);
-
 branch.setAttribute("role", roles.branch);
-if (link && link.getAttribute("href") !== "#") branch.setAttribute("aria-roledescription", "has link");
+
+if (options.labelLinks) branch.setAttribute("aria-label", link.textContent);
+
+if (link && link.getAttribute("href") !== "#") {
+if (options.labelLinks) branch.setAttribute("aria-label", `has link, ${branch.getAttribute("aria-label")}`);
+else branch.setAttribute("aria-roledescription", "has link");
+} // if
+
 if ($("ul", branch)) {
 branch.setAttribute("aria-expanded", "false");
-if (menu) branch.setAttribute("aria-haspopup", "true");
+if (options.type === "menu") {
+branch.setAttribute("aria-haspopup", "true");
+if (options.visuallyIndicateMenus) link.innerHTML = `${link.innerHTML} &DownArrow;`;
+} // if
 } // if
 }); // forEach branch
 
